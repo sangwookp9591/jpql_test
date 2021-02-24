@@ -38,20 +38,35 @@ public class JpaMain {
             //연관관계 없는
             //String query2 = "select m from Member m left join Team t on m.username = t.name";
 
-
-
-
             //SELECT저절에서 서브쿼리사용 하이버네이트에서 지원
             //String query = "select (select avg(m1.age) from Member m1 ) as aveAge from Member m join Team t on m.username = t.name";
 
             //FROM 절의 서브쿼리는 현재 JPQL에서 사용할 수 없다.
             //String query = "select nm.age, nm.username" +
-              //      " from (select m.age,m.username from Member m) as nm";
+            //      " from (select m.age,m.username from Member m) as nm";
 
-           // String query2 = "select m from Member m left join Team t on m.username = t.name";
-           // List<Member> result = em.createQuery(query, Member.class).getResultList();
+            // String query2 = "select m from Member m left join Team t on m.username = t.name";
+            // List<Member> result = em.createQuery(query, Member.class).getResultList();
 
+            //ENUM 사용 방법 1
+//            String query = "select m.username, 'HELLO', TRUE from Member m " +
+//                    "where m.type = jpql.MemberType.ADMIN";
+//
+//            List<Object[]> result = em.createQuery(query)
+//                    .getResultList();
 
+            //ENUM 사용 방법 2
+            String query = "select m.username, 'HELLO', TRUE from Member m " +
+                    "where m.type = :userType";
+
+            List<Object[]> result = em.createQuery(query)
+                    .setParameter("userType", MemberType.ADMIN)
+                    .getResultList();
+            for (Object[] objects : result) {
+                System.out.println("objects[0] = " + objects[0]);
+                System.out.println("objects[1] = " + objects[1]);
+                System.out.println("objects[2] = " + objects[2]);
+            }
             tx.commit();
         } catch (Exception e){
             tx.rollback();
