@@ -20,30 +20,28 @@ public class JpaMain {
             member.setAge(10);
             em.persist(member);
 
-            //내 타입정보를 정확하게 명기한 경우.
-            Member singleResult1 = em.createQuery("select m from Member m where m.username = :username", Member.class)          //(쿼리, 응답정보에 대한 type class<기본적으론 entity>);
-                    .setParameter("username", "member1")
-                    .getSingleResult();
+            em.flush();
+            em.clear();
 
-            System.out.println("singleResult1 = " + singleResult1);
-            
-            //쿼리를 날렷는데 값이 무조건 하나야 이런경우는
-           // Member singleResult = query.getSingleResult();
-
-
-//            List<Member> resultList = query.getResultList();
-//            for (Member member1 : resultList) {
-//                System.out.println("member1 = " + member1);
-//            }
+            //여기서 List안에 있는 Member는 영속성 컨텍스트로 관리가 될까 안될까?
+            List<MemberDTO> resultList = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m", MemberDTO.class)          //(쿼리, 응답정보에 대한 type class<기본적으론 entity>);
+                    .getResultList();
+            MemberDTO memberDTO = resultList.get(0);
+            System.out.println("memberDTO getUsername = " + memberDTO.getUsername());
+            System.out.println("memberDTO getAge = " + memberDTO.getAge());
 
 
-            //타입 정보를 명기할수 없을때는?
-            //TypedQuery<Member> query = em.createQuery("select m.username, m.age from Member m"); (x)
-            //username은 String이고 age는 int이다. -> 두개가달라서 명기할수 없어서 타입쿼리말고 쿼리라고 써야함.
-            Query query2 = em.createQuery("select m.username, m.age from Member m");
+            Object o = resultList.get(0);
+            Object[] result = (Object[]) o;
 
-            //username만 쓸경우 String으로 잡으면 된다. ("select m.username from Member m",String.class);
+            System.out.println("username = " + result[0]);
+            System.out.println("age = " + result[1]);
+            //Member findMember = result.get(0);
+            //m 랑 join한다 team을
 
+            //findMember.setAge(20);
+
+            //System.out.println("singleResult1 = " + singleResult1);
             tx.commit();
         } catch (Exception e){
             tx.rollback();
