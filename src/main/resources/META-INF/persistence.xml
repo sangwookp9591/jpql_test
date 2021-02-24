@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2"
+             xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+    <persistence-unit name="hello"><!--JPA를 쓸건데 이름은 뭘쓸거야?-->
+        <properties>
+            <!-- 필수 속성 DB접근 정보(복습)  -->
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/test"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <!--hibernate.dialect DB방언<방언: SQL 표준을 지키지 않는 특정 데이터베이스만의 고유한 기능> -JPA는 특정 DB에 종속 X MYSQL쓰다가 ORACLE 써도 바껴 있어야함.-->
+            <!--각각의 데이터베이스가 제공하는 SQL 문법과 함수는 조금씩 다름-->
+            <!--가변 문자: MySQL은 VARCHAR, Oracle은 VARCHAR2-->
+            <!--문자열을 자르는 함수: SQL 표준은 SUBSTRING(), Oracle은 SUBSTR() -->
+            <!--페이징: MySQL은 LIMIT , Oracle은 ROWNUM -->
+
+            <!-- 옵션 -->
+            <property name="hibernate.show_sql" value="true"/><!--sql 쿼리 보여줘!-->
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
+            <property name="hibernate.jdbc.batch_size" value="10"/>
+            <property name="hibernate.hbm2ddl.auto" value="create" />
+        </properties>
+    </persistence-unit>
+</persistence>
