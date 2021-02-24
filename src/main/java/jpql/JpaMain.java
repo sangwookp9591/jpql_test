@@ -34,10 +34,22 @@ public class JpaMain {
             //String setaJoinQuery = "select m from Member m, Team t where m.username = t.name";
 
             //조인대상 필터링
-            String query1 = "select m from Member m left join m.team t on t.name = 'teamA'";
+            //String query1 = "select m from Member m left join m.team t on t.name = 'teamA'";
             //연관관계 없는
-            String query2 = "select m from Member m left join Team t on m.username = t.name";
-            List<Member> result = em.createQuery(query1, Member.class).getResultList();
+            //String query2 = "select m from Member m left join Team t on m.username = t.name";
+
+
+
+
+            //SELECT저절에서 서브쿼리사용 하이버네이트에서 지원
+            //String query = "select (select avg(m1.age) from Member m1 ) as aveAge from Member m join Team t on m.username = t.name";
+
+            //FROM 절의 서브쿼리는 현재 JPQL에서 사용할 수 없다.
+            //String query = "select nm.age, nm.username" +
+              //      " from (select m.age,m.username from Member m) as nm";
+
+           // String query2 = "select m from Member m left join Team t on m.username = t.name";
+           // List<Member> result = em.createQuery(query, Member.class).getResultList();
 
 
             tx.commit();
