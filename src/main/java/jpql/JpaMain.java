@@ -20,52 +20,37 @@ public class JpaMain {
             em.persist(team);
 
             Member member = new Member();
-            member.setUsername("member1");
+            member.setUsername(null);
             member.setAge(10);
-
+            member.setType(MemberType.ADMIN);
             member.setTeam(team);
             em.persist(member);
 
             em.flush();
             em.clear();
 
-            //String innerJoinQuery ="select m from Member m inner join  m.team t";
-            //String outerJoinQuery ="select m from Member m left outer join  m.team t";
-            //String setaJoinQuery = "select m from Member m, Team t where m.username = t.name";
-
-            //조인대상 필터링
-            //String query1 = "select m from Member m left join m.team t on t.name = 'teamA'";
-            //연관관계 없는
-            //String query2 = "select m from Member m left join Team t on m.username = t.name";
-
-            //SELECT저절에서 서브쿼리사용 하이버네이트에서 지원
-            //String query = "select (select avg(m1.age) from Member m1 ) as aveAge from Member m join Team t on m.username = t.name";
-
-            //FROM 절의 서브쿼리는 현재 JPQL에서 사용할 수 없다.
-            //String query = "select nm.age, nm.username" +
-            //      " from (select m.age,m.username from Member m) as nm";
-
-            // String query2 = "select m from Member m left join Team t on m.username = t.name";
-            // List<Member> result = em.createQuery(query, Member.class).getResultList();
-
-            //ENUM 사용 방법 1
-//            String query = "select m.username, 'HELLO', TRUE from Member m " +
-//                    "where m.type = jpql.MemberType.ADMIN";
+            //기본 case 식
+//            String query =
+//                    "select " +
+//                            "case when m.age <= 10 then '학생요금' " +
+//                            "     when m.age >= 60 then '경로요금' " +
+//                            "     else '일반요금' " +
+//                            "end" +
+//                    " from Member m";
 //
-//            List<Object[]> result = em.createQuery(query)
-//                    .getResultList();
+//            List<String> result = em.createQuery(query, String.class).getResultList();
+//            for (String s : result) {
+//                System.out.println("s = " + s);
+//            }
 
-            //ENUM 사용 방법 2
-            String query = "select m.username, 'HELLO', TRUE from Member m " +
-                    "where m.type = :userType";
+            //조건식 case 식
+            String query = "select nullif(m.username,'관리자') from Member m ";
 
-            List<Object[]> result = em.createQuery(query)
-                    .setParameter("userType", MemberType.ADMIN)
-                    .getResultList();
-            for (Object[] objects : result) {
-                System.out.println("objects[0] = " + objects[0]);
-                System.out.println("objects[1] = " + objects[1]);
-                System.out.println("objects[2] = " + objects[2]);
+            //username이 없으면 이름없는 회원
+            List<String> resultList = em.createQuery(query, String.class).getResultList();
+
+            for (String s : resultList) {
+                System.out.println("s = " + s);
             }
             tx.commit();
         } catch (Exception e){
