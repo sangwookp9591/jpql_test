@@ -41,47 +41,17 @@ public class JpaMain {
 
             em.flush();
             em.clear();
-
-//            String query =  "select m From Member m join fetch m.team";
-//            //Member를 조인하긴 할건데 일반적 sql join을 하긴하는데 fetch라는 것으로 한번에 끌고와 끌고오는데 뭘끌고 오냐 team을 끌고와.
-//
-//            List<Member> result = em.createQuery(query, Member.class).getResultList();
-//            for (Member member : result) {
-//                System.out.println("member = " + member.getUsername()+ ", "+member.getTeam().getName());
-//                //여기서 Member 에서의 team은 lazy 지연로딩 때문에 proxy로 설정되어있고, memger.getTeam()을 호출할때마다 DB에서 값을 가져온다.
-//            }
-
-//            String query = "select t From Team t join fetch t.members";
-//            List<Team> result = em.createQuery(query, Team.class).getResultList();
-//            for (Team team : result) {
-//                System.out.println("team = " + team.getName() + "| members = " + team.getMembers().size());
-//                for(Member member : team.getMembers()){
-//                    System.out.println("member = " + member);
-//                }
-//            }
-
-//
-//            String query = "select distinct t From Team t join fetch t.members";
-//            List<Team> result = em.createQuery(query, Team.class).getResultList();
-//            for (Team team : result) {
-//                System.out.println("team = " + team.getName() + "| members = " + team.getMembers().size());
-//                for(Member member : team.getMembers()){
-//                    System.out.println("member = " + member);
-//                }
-//            }
-
-            //과감하게 뺸다.
-            //  String query = "select m From Member m join fetch m.team t";
-            String query = "select t From Team t";
-            List<Team> result = em.createQuery(query, Team.class)
-                    .setFirstResult(0)
-                    .setMaxResults(2)
+            
+//            String query = "select m From Member m where m = :member";
+//            Member findMember = em.createQuery(query, Member.class)
+//                    .setParameter("member",member1)
+//                    .getSingleResult();
+            String query = "select m From Member m where m.team = :team";
+            List<Member> result = em.createQuery(query, Member.class)
+                    .setParameter("team", teamA)
                     .getResultList();
-            for (Team team : result) {
-                System.out.println("team = " + team.getName() + "| members = " + team.getMembers().size());
-                for(Member member : team.getMembers()){
-                    System.out.println("member = " + member);
-                }
+            for (Member member : result) {
+                System.out.println("member = " + member);
             }
             tx.commit();
 
