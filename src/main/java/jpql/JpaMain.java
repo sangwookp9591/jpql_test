@@ -26,28 +26,40 @@ public class JpaMain {
 
             Member member1 = new Member();
             member1.setUsername("회원1");
+            member1.setAge(0);
             member1.setTeam(teamA);
             em.persist(member1);
 
             Member member2 = new Member();
             member2.setUsername("회원2");
+            member1.setAge(0);
             member2.setTeam(teamB);
             em.persist(member2);
 
             Member member3 = new Member();
             member3.setUsername("회원3");
+            member1.setAge(0);
             member3.setTeam(teamB);
             em.persist(member3);
 
-            em.flush();
+           /* em.flush();
+            em.clear();*/
+
+            //모든 회원의 나이를 20살로 바꿔
+            //FLUSH(커밋을 하거나,QUERY가나갈때, 강제로 호출할떄) 자동 호출
+            int resultCount = em.createQuery("update Member m set m.age = 20")
+                    .executeUpdate();
+
             em.clear();
 
-            List<Member> result = em.createNamedQuery("Member.findByUsername", Member.class)
-                    .setParameter("username", "회원1")
-                    .getResultList();
-            for (Member member : result) {
-                System.out.println("member = " + member);
-            }
+            Member findMember = em.find(Member.class, member1.getId());
+
+            System.out.println("member1.getAge() = " + member1.getAge());
+
+            /*System.out.println("member2.getAge() = " + member2.getAge());
+            System.out.println("member3.getAge() = " + member3.getAge());*/
+            //이렇게 하면 영속성 컨텍스트에는 20살인게 반영이 안되있다.
+
 
             tx.commit();
 
