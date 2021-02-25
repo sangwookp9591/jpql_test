@@ -48,11 +48,12 @@ public class JpaMain {
 //                    .getSingleResult();
             String query = "select m From Member m where m.team = :team";
             List<Member> result = em.createQuery(query, Member.class)
-                    .setParameter("team", teamA)
+                    .setParameter("team", teamB)
                     .getResultList();
             for (Member member : result) {
                 System.out.println("member = " + member);
             }
+
             tx.commit();
 
         } catch (Exception e){
