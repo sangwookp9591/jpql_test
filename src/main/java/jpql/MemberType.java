@@ -1,6 +1,8 @@
 package jpql;
 
-public enum MemberType {
-    ADMIN, USER
+import javax.persistence.Entity;
 
+
+public enum MemberType {
+    ADMIN,USER
 }
